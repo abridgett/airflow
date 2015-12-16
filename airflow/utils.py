@@ -499,7 +499,7 @@ def send_email(to, subject, html_content, files=None, dryrun=False):
         else:
             to = [to]
 
-    msg = MIMEMultipart('alternative')
+    msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = SMTP_MAIL_FROM
     msg['To'] = ", ".join(to)
