@@ -1623,6 +1623,10 @@ class BaseOperator(object):
             result = {
                 k: rt(v, context)
                 for k, v in list(content.items())}
+        elif isinstance(content, type(None)):
+            result = None
+        elif isinstance(content, type(True)):
+            result = content.__str__()
         else:
             param_type = type(content)
             msg = (
