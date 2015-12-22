@@ -23,6 +23,7 @@ import signal
 import socket
 import sys
 from urllib.parse import urlparse
+from types import NoneType,BooleanType
 
 from sqlalchemy import (
     Column, Integer, String, DateTime, Text, Boolean, ForeignKey, PickleType,
@@ -1623,6 +1624,10 @@ class BaseOperator(object):
             result = {
                 k: rt(v, context)
                 for k, v in list(content.items())}
+        elif isinstance(content, NoneType):
+            result = None
+        elif isinstance(content, BooleanType):
+            result = content.__str__()
         else:
             param_type = type(content)
             msg = (
