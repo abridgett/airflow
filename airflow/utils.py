@@ -40,7 +40,6 @@ from croniter import croniter
 
 from airflow import settings
 from airflow import configuration
-from airflow.configuration import AirflowConfigException
 
 
 class AirflowException(Exception):
@@ -532,12 +531,9 @@ def send_email(to, subject, html_content, files=None, dryrun=False):
 def send_MIME_email(e_from, e_to, mime_msg, dryrun=False):
     SMTP_HOST = configuration.get('smtp', 'SMTP_HOST')
     SMTP_PORT = configuration.getint('smtp', 'SMTP_PORT')
+    SMTP_USER = configuration.get('smtp', 'SMTP_USER')
+    SMTP_PASSWORD = configuration.get('smtp', 'SMTP_PASSWORD')
     SMTP_STARTTLS = configuration.getboolean('smtp', 'SMTP_STARTTLS')
-    try:
-        SMTP_USER = configuration.get('smtp', 'SMTP_USER')
-        SMTP_PASSWORD = configuration.get('smtp', 'SMTP_PASSWORD')
-    except AirflowConfigException:
-        SMTP_USER = None
 
     if not dryrun:
         s = smtplib.SMTP(SMTP_HOST, SMTP_PORT)
