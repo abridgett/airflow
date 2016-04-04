@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 """
 Authentication is implemented using flask_login and different environments can
 implement their own login mechanisms by providing an `airflow_login` module
@@ -11,14 +26,14 @@ import logging
 import os
 import sys
 
-import airflow.configuration
+from airflow import configuration as conf
 
 from airflow.models import DAG
-from flask.ext.admin import BaseView
+from flask_admin import BaseView
 from importlib import import_module
 from airflow.utils import AirflowException
 
-DAGS_FOLDER = os.path.expanduser(configuration.get('core', 'DAGS_FOLDER'))
+DAGS_FOLDER = os.path.expanduser(conf.get('core', 'DAGS_FOLDER'))
 if DAGS_FOLDER not in sys.path:
     sys.path.append(DAGS_FOLDER)
 
@@ -28,12 +43,13 @@ login = None
 def load_login():
     auth_backend = 'airflow.default_login'
     try:
-        if configuration.getboolean('webserver', 'AUTHENTICATE'):
-            auth_backend = configuration.get('webserver', 'auth_backend')
-    except configuration.AirflowConfigException:
-        if configuration.getboolean('webserver', 'AUTHENTICATE'):
-            logging.warning("auth_backend not found in webserver config reverting to *deprecated*"
-                            " behavior of importing airflow_login")
+        if conf.getboolean('webserver', 'AUTHENTICATE'):
+            auth_backend = conf.get('webserver', 'auth_backend')
+    except conf.AirflowConfigException:
+        if conf.getboolean('webserver', 'AUTHENTICATE'):
+            logging.warning(
+                "auth_backend not found in webserver config reverting to "
+                "*deprecated*  behavior of importing airflow_login")
             auth_backend = "airflow_login"
 
     try:
@@ -45,7 +61,7 @@ def load_login():
             "Please correct your authentication backend or disable authentication: %s",
             auth_backend, err
         )
-        if configuration.getboolean('webserver', 'AUTHENTICATE'):
+        if conf.getboolean('webserver', 'AUTHENTICATE'):
             raise AirflowException("Failed to import authentication backend")
 
 

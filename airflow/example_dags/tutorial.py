@@ -1,6 +1,6 @@
 """
 ### Tutorial Documentation
-Code that goes along with the Airflow located
+Documentation that goes along with the Airflow tutorial located
 [here](http://pythonhosted.org/airflow/tutorial.html)
 """
 from airflow import DAG
@@ -28,7 +28,7 @@ default_args = {
 
 dag = DAG('tutorial', default_args=default_args)
 
-# t1, t2 and t3 are examples of tasks created by instatiating operators
+# t1, t2 and t3 are examples of tasks created by instantiating operators
 t1 = BashOperator(
     task_id='print_date',
     bash_command='date',
